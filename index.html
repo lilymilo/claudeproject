@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RQA - Revand Aqila</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="pixel-grid"></div>
+        <div class="floating-shapes">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+            <div class="shape shape3"></div>
+            <div class="shape shape4"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1 class="logo-text">RQA</h1>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#works" class="nav-link">Works</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="sun-moon" style="display: inline-flex; align-items: center; gap: 0.3em; font-size: 1.5em;"></span>
+                        <img src="asset/sun.png" alt="Sun" class="sun" style="width: 1.5em; height: 1.5em;">
+                        <img src="asset/moon.png" alt="Moon" class="moon" style="width: 1.5em; height: 1.5em;">
+                    </span>
+                    </span>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Hello, I'm 
+                        <span class="gradient-text">Revand Aqila</span>
+                    </h1>
+                    <p class="hero-subtitle">Front End Developer & UI/UX Enthusiast</p>
+                    <button class="cta-btn" onclick="scrollToSection('works')">
+                        <span>See My Works</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+                <div class="hero-mascot">
+                    <div class="computer-mascot">
+                        <div class="monitor">
+                            <div class="screen">
+                                <div class="eyes">
+                                    <div class="eye"></div>
+                                    <div class="eye"></div>
+                                </div>
+                                <div class="mouth"></div>
+                            </div>
+                        </div>
+                        <div class="keyboard">
+                            <div class="key"></div>
+                            <div class="key"></div>
+                            <div class="key"></div>
+                            <div class="key"></div>
+                        </div>
+                        <div class="sparkles">
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-avatar">
+                    <div class="avatar-frame">
+                        <div class="avatar-img"><img src="asset/pe.png" alt=""></div>
+                        <div class="avatar-glow"></div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <p class="about-description">
+                        I'm a passionate Gen Z Front End Developer who loves creating beautiful, 
+                        interactive web experiences. With a keen eye for design and a love for 
+                        retro-futuristic aesthetics, I bring creativity and technical skills 
+                        together to build amazing digital products.
+                    </p>
+                    <div class="skill-highlights">
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Next.js</span>
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">Netlify</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Works Section -->
+    <section id="works" class="works section">
+        <div class="container">
+            <h2 class="section-title">My Works</h2>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="ui">UI Design</button>
+                <button class="filter-btn" data-filter="web">Web Dev</button>
+                <button class="filter-btn" data-filter="illustration">Illustration</button>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/web.png" alt=""></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Crypto Trade Cutethosi</h3>
+                        <p class="project-desc">Modern trade experience with React and friendly UI</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="ui">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/mobile.png" alt=""></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Mobile App Design</h3>
+                        <p class="project-desc">Clean and intuitive UI/UX design</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/meow.png" alt=""></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Portfolio Website</h3>
+                        <p class="project-desc">Responsive portfolio with animations</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="illustration">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/digital.png"></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Digital Illustrations</h3>
+                        <p class="project-desc">Creative digital art and graphics</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="ui">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/dashboard.png" alt=""></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Dashboard Design</h3>
+                        <p class="project-desc">Analytics dashboard with data viz</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+
+                <div class="project-card" data-category="web">
+                    <div class="project-thumbnail">
+                        <div class="project-icon"><img src="asset/game.png" alt=""></div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Game Landing Page</h3>
+                        <p class="project-desc">Interactive gaming website</p>
+                        <a href="#" class="project-link">View Project →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills section">
+        <div class="container">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">HTML/CSS</span>
+                        <span class="skill-percentage">95%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="95%"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">JavaScript</span>
+                        <span class="skill-percentage">88%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="88%"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">React</span>
+                        <span class="skill-percentage">85%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="85%"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">UI/UX Design</span>
+                        <span class="skill-percentage">90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="90%"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">Next.js</span>
+                        <span class="skill-percentage">80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="80%"></div>
+                    </div>
+                </div>
+
+                <div class="skill-item">
+                    <div class="skill-info">
+                        <span class="skill-name">Figma</span>
+                        <span class="skill-percentage">92%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-width="92%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            <span class="error-message" id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                            <span class="error-message" id="emailError"></span>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                            <span class="error-message" id="messageError"></span>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span>Send Message</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="social-links">
+                    <h3>Connect with me</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-link" title="LinkedIn">
+                            <span style="display: inline-flex; align-items: center; height: 1.8em;">
+                                <img src="asset/linkedin.png" alt="LinkedIn" style="height: 1.4em; width: 1.4em; object-fit: contain; display: block;">
+                            </span>
+                        </a>
+                        <a href="#" class="social-link" title="GitHub">
+                            <span style="display: inline-flex; align-items: center; height: 1.8em;"></span>
+                                <img src="asset/github.png" alt="GitHub" style="height: 1.4em; width: 1.4em; object-fit: contain; display: block;">
+                            </span>
+                        </a>
+                        <a href="#" class="social-link" title="Instagram">
+                            <span>
+                                <img src="asset/instagram.png" alt="Instagram" style="height: 1.4em; width: 1.4em; object-fit: contain; display: block;">
+                            </span>
+                        </a>
+                        <a href="#" class="social-link" title="Discord">
+                            <span>
+                                <img src="asset/discord.png" alt="Discord" style="height: 1.4em; width: 1.4em; object-fit: contain; display: block;">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p class="copyright">© 2025 Revand Aqila. All Rights Reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#works">Works</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
