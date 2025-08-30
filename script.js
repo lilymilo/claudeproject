@@ -56,28 +56,36 @@ function scrollToSection(sectionId) {
   closeMobileMenu();
 }
 
-// Parallax Background Effect
+// Parallax Background Effect (throttled with rAF to reduce work)
 function initParallax() {
   const shapes = document.querySelectorAll('.shape');
   const pixelGrid = document.querySelector('.pixel-grid');
-  
+  let rafPending = false;
+  let mouseX = 0, mouseY = 0;
+
   document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX / window.innerWidth;
-    const mouseY = e.clientY / window.innerHeight;
-    
-    shapes.forEach((shape, index) => {
-      const speed = (index + 1) * 0.5;
-      const x = (mouseX - 0.5) * speed * 50;
-      const y = (mouseY - 0.5) * speed * 50;
-      
-      shape.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    
-    // Pixel grid parallax
-    const gridX = (mouseX - 0.5) * 10;
-    const gridY = (mouseY - 0.5) * 10;
-    pixelGrid.style.transform = `translate(${gridX}px, ${gridY}px)`;
-  });
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        shapes.forEach((shape, index) => {
+          const speed = (index + 1) * 0.35; // slightly reduced movement
+          const x = (mouseX - 0.5) * speed * 30;
+          const y = (mouseY - 0.5) * speed * 30;
+          shape.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // Pixel grid parallax - subtle
+        const gridX = (mouseX - 0.5) * 6;
+        const gridY = (mouseY - 0.5) * 6;
+        if (pixelGrid) pixelGrid.style.transform = `translate(${gridX}px, ${gridY}px)`;
+
+        rafPending = false;
+      });
+    }
+  }, { passive: true });
 }
 
 // Scroll Reveal Animation
@@ -408,62 +416,11 @@ function initTypewriterEffect() {
   }, 1000);
 }
 
-// Cursor trail effect
+// Cursor trail effect - made lightweight (early return to disable heavy DOM ops)
 function initCursorTrail() {
-  const trail = [];
-  const trailLength = 8;
-  
-  // Create trail elements
-  for (let i = 0; i < trailLength; i++) {
-    const trailElement = document.createElement('div');
-    trailElement.className = 'cursor-trail';
-    trailElement.style.cssText = `
-      position: fixed;
-      width: 6px;
-      height: 6px;
-      background: var(--primary-blue);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: ${1 - (i / trailLength)};
-      transition: all 0.1s ease;
-    `;
-    document.body.appendChild(trailElement);
-    trail.push(trailElement);
-  }
-  
-  let mouseX = 0, mouseY = 0;
-  
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-  
-  function updateTrail() {
-    let currentX = mouseX;
-    let currentY = mouseY;
-    
-    trail.forEach((element, index) => {
-      element.style.left = currentX - 3 + 'px';
-      element.style.top = currentY - 3 + 'px';
-      
-      if (index === 0) {
-        currentX = mouseX;
-        currentY = mouseY;
-      } else {
-        const prevElement = trail[index - 1];
-        const prevX = parseFloat(prevElement.style.left);
-        const prevY = parseFloat(prevElement.style.top);
-        
-        currentX += (prevX - currentX) * 0.3;
-        currentY += (prevY - currentY) * 0.3;
-      }
-    });
-    
-    requestAnimationFrame(updateTrail);
-  }
-  
-  updateTrail();
+  // Disabled by default to save CPU on lower devices.
+  // If you want a very light trail, reduce trailLength to 2-4 and remove transitions.
+  return;
 }
 
 // Project card tilt effect
@@ -491,86 +448,29 @@ function initCardTiltEffect() {
   });
 }
 
-// Loading screen animation
+// Loading screen animation - simplified and much shorter
 function initLoadingScreen() {
   const loadingScreen = document.createElement('div');
   loadingScreen.className = 'loading-screen';
-  loadingScreen.innerHTML = `
-    <div class="loading-content">
-      <div class="loading-logo">
-        <h1> Wait ꩜ ᯅ ꩜</h1>
-        <div class="loading-bar">
-          <div class="loading-progress"></div>
-        </div>
-      </div>
-    </div>
-  `;
   loadingScreen.style.cssText = `
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    transition: opacity 0.5s ease;
   `;
-  
-  const loadingContent = loadingScreen.querySelector('.loading-content');
-  loadingContent.style.cssText = `
-    text-align: center;
-    color: white;
-  `;
-  
-  const loadingLogo = loadingScreen.querySelector('.loading-logo h1');
-  loadingLogo.style.cssText = `
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 30px;
-    animation: pulse 1.5s ease-in-out infinite;
-  `;
-  
-  const loadingBar = loadingScreen.querySelector('.loading-bar');
-  loadingBar.style.cssText = `
-    width: 200px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    overflow: hidden;
-    margin: 0 auto;
-  `;
-  
-  const loadingProgress = loadingScreen.querySelector('.loading-progress');
-  loadingProgress.style.cssText = `
-    width: 0%;
-    height: 100%;
-    background: white;
-    border-radius: 2px;
-    transition: width 0.1s ease;
-  `;
-  
+  loadingScreen.innerHTML = '<div style="color:white;font-weight:700;padding:20px;">Loading…</div>';
   document.body.appendChild(loadingScreen);
-  
-  // Animate loading progress
-  let progress = 0;
-  const loadingInterval = setInterval(() => {
-    progress += Math.random() * 15;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(loadingInterval);
-      
-      setTimeout(() => {
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => {
-          document.body.removeChild(loadingScreen);
-        }, 500);
-      }, 800);
-    }
-    loadingProgress.style.width = progress + '%';
-  }, 100);
+
+  // Remove quickly to reduce blocking time
+  setTimeout(() => {
+    loadingScreen.style.opacity = '0';
+    setTimeout(() => {
+      if (loadingScreen.parentNode) loadingScreen.parentNode.removeChild(loadingScreen);
+    }, 200);
+  }, 600);
 }
 
 // Easter egg - Konami code
@@ -596,49 +496,25 @@ function initKonamiCode() {
 }
 
 function triggerEasterEgg() {
-  // Create rainbow effect
-  const rainbowCSS = `
-    @keyframes rainbow {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-    
-    body * {
-      animation: rainbow 2s linear infinite !important;
-    }
-  `;
-  
-  const style = document.createElement('style');
-  style.textContent = rainbowCSS;
-  document.head.appendChild(style);
-  
-  // Show easter egg message
+  // Lightweight message only (no global hue-rotate animations)
   const message = document.createElement('div');
-  message.innerHTML = '🎉 KONAMI CODE ACTIVATED! 🌈 Welcome to the rainbow dimension!';
+  message.innerHTML = '🎉 KONAMI ACTIVATED! 🌈';
   message.style.cssText = `
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-    background-size: 400% 400%;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     color: white;
-    padding: 20px 40px;
-    border-radius: 15px;
-    font-size: 1.2rem;
-    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 10px;
     z-index: 10001;
-    animation: gradient 2s ease infinite, bounce 0.5s ease infinite alternate;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   `;
-  
   document.body.appendChild(message);
-  
-  // Remove effects after 5 seconds
+
   setTimeout(() => {
-    document.head.removeChild(style);
-    document.body.removeChild(message);
-  }, 5000);
+    if (message.parentNode) message.parentNode.removeChild(message);
+  }, 3500);
 }
 
 // Smooth scroll behavior for all internal links
