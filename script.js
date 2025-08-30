@@ -58,29 +58,40 @@ function scrollToSection(sectionId) {
 
 // Parallax Background Effect (throttled with rAF to reduce work)
 function initParallax() {
+  // disable on small screens to save CPU
+  if (window.innerWidth <= 1024) return;
+
   const shapes = document.querySelectorAll('.shape');
   const pixelGrid = document.querySelector('.pixel-grid');
   let rafPending = false;
   let mouseX = 0, mouseY = 0;
 
   document.addEventListener('mousemove', (e) => {
+    // very light sampling
     mouseX = e.clientX / window.innerWidth;
     mouseY = e.clientY / window.innerHeight;
 
     if (!rafPending) {
       rafPending = true;
       requestAnimationFrame(() => {
+        const centerX = mouseX - 0.5;
+        const centerY = mouseY - 0.5;
+
         shapes.forEach((shape, index) => {
-          const speed = (index + 1) * 0.35; // slightly reduced movement
-          const x = (mouseX - 0.5) * speed * 30;
-          const y = (mouseY - 0.5) * speed * 30;
+          // reduce amplitude and work
+          const speed = 0.25 + index * 0.15;
+          const x = centerX * speed * 18;
+          const y = centerY * speed * 18;
           shape.style.transform = `translate(${x}px, ${y}px)`;
+          // hint to browser
+          shape.style.willChange = 'transform';
         });
 
-        // Pixel grid parallax - subtle
-        const gridX = (mouseX - 0.5) * 6;
-        const gridY = (mouseY - 0.5) * 6;
-        if (pixelGrid) pixelGrid.style.transform = `translate(${gridX}px, ${gridY}px)`;
+        if (pixelGrid) {
+          // subtle movement only
+          pixelGrid.style.transform = `translate(${centerX * 4}px, ${centerY * 4}px)`;
+          pixelGrid.style.willChange = 'transform';
+        }
 
         rafPending = false;
       });
@@ -321,134 +332,72 @@ function showSuccessMessage() {
   }, 4000);
 }
 
-// Header scroll effect
+// Header scroll effect (rAF-throttled)
 function initHeaderScroll() {
   let lastScrollY = window.scrollY;
-  
-  window.addEventListener('scroll', () => {
+  let raf = null;
+
+  const onScroll = () => {
     const header = document.querySelector('.header');
     const currentScrollY = window.scrollY;
-    
+
     if (currentScrollY > 100) {
-      header.style.background = currentTheme === 'light' 
-        ? 'rgba(255, 255, 255, 0.95)' 
+      header.style.background = currentTheme === 'light'
+        ? 'rgba(255, 255, 255, 0.95)'
         : 'rgba(15, 23, 42, 0.95)';
-      header.style.backdropFilter = 'blur(15px)';
+      header.style.backdropFilter = 'blur(12px)';
     } else {
-      header.style.background = currentTheme === 'light' 
-        ? 'rgba(255, 255, 255, 0.95)' 
+      header.style.background = currentTheme === 'light'
+        ? 'rgba(255, 255, 255, 0.95)'
         : 'rgba(15, 23, 42, 0.95)';
-      header.style.backdropFilter = 'blur(10px)';
+      header.style.backdropFilter = 'blur(8px)';
     }
-    
-    // Hide header on scroll down, show on scroll up
-    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+
+    if (currentScrollY > lastScrollY && currentScrollY > 120) {
       header.style.transform = 'translateY(-100%)';
     } else {
       header.style.transform = 'translateY(0)';
     }
-    
+
     lastScrollY = currentScrollY;
-  });
+    raf = null;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (raf === null) {
+      raf = requestAnimationFrame(onScroll);
+    }
+  }, { passive: true });
 }
 
-// Active navigation highlighting
+// Active navigation highlighting (single rAF-throttled listener)
 function initActiveNavigation() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
-  
-  window.addEventListener('scroll', () => {
-    const scrollPos = window.scrollY + 100;
-    
+  let raf = null;
+
+  const highlight = () => {
+    const scrollPos = window.scrollY + 120;
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
       const sectionHeight = section.offsetHeight;
       const sectionId = section.getAttribute('id');
-      
+
       if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
         navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${sectionId}`) {
-            link.classList.add('active');
-          }
+          link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
         });
       }
     });
-  });
+    raf = null;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (raf === null) raf = requestAnimationFrame(highlight);
+  }, { passive: true });
 }
 
-// Typewriter effect for hero title
-function initTypewriterEffect() {
-  const heroTitle = document.querySelector('.hero-title');
-  const text = "Hello, I'm Revand Al Hafiz";
-  const gradientText = "Revand Al Hafiz";
-  let index = 0;
-  
-  // Clear existing content
-  heroTitle.innerHTML = '';
-  
-  function typeWriter() {
-    if (index < text.length) {
-      const currentChar = text.charAt(index);
-      
-      if (index >= text.indexOf(gradientText)) {
-        // Start gradient text
-        if (index === text.indexOf(gradientText)) {
-          heroTitle.innerHTML = text.substring(0, text.indexOf(gradientText)) + '<span class="gradient-text">';
-        }
-        heroTitle.querySelector('.gradient-text').textContent += currentChar;
-        
-        if (index === text.length - 1) {
-          heroTitle.querySelector('.gradient-text').innerHTML += '</span>';
-        }
-      } else {
-        heroTitle.textContent += currentChar;
-      }
-      
-      index++;
-      setTimeout(typeWriter, 100);
-    }
-  }
-  
-  // Start typewriter after page load
-  setTimeout(() => {
-    typeWriter();
-  }, 1000);
-}
-
-// Cursor trail effect - made lightweight (early return to disable heavy DOM ops)
-function initCursorTrail() {
-  // Disabled by default to save CPU on lower devices.
-  // If you want a very light trail, reduce trailLength to 2-4 and remove transitions.
-  return;
-}
-
-// Project card tilt effect
-function initCardTiltEffect() {
-  const projectCards = document.querySelectorAll('.project-card');
-  
-  projectCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = (y - centerY) / 10;
-      const rotateY = (centerX - x) / 10;
-      
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
-    });
-    
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-    });
-  });
-}
-
-// Loading screen animation - simplified and much shorter
+// Reduce loading screen time
 function initLoadingScreen() {
   const loadingScreen = document.createElement('div');
   loadingScreen.className = 'loading-screen';
@@ -461,17 +410,35 @@ function initLoadingScreen() {
     justify-content: center;
     z-index: 10000;
   `;
-  loadingScreen.innerHTML = '<div style="color:white;font-weight:700;padding:20px;">Loading…</div>';
+  loadingScreen.innerHTML = '<div style="color:white;font-weight:700;padding:16px;">Loading…</div>';
   document.body.appendChild(loadingScreen);
 
-  // Remove quickly to reduce blocking time
+  // Remove quicker
   setTimeout(() => {
     loadingScreen.style.opacity = '0';
     setTimeout(() => {
       if (loadingScreen.parentNode) loadingScreen.parentNode.removeChild(loadingScreen);
-    }, 200);
-  }, 600);
+    }, 120);
+  }, 280);
 }
+
+// Debounce helper and improved resize handler
+function debounce(fn, wait = 200) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
+window.addEventListener('resize', debounce(() => {
+  if (window.innerWidth > 768) {
+    closeMobileMenu();
+  }
+  // remove any cursor trails left behind
+  document.querySelectorAll('.cursor-trail').forEach(t => t.remove());
+  if (window.innerWidth > 768) initCursorTrail();
+}, 250));
 
 // Easter egg - Konami code
 function initKonamiCode() {
